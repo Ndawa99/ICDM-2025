@@ -49,7 +49,7 @@ source("main_script.R")
 
 ```r
 
-
+---
 
 ## Reproducibility
 - Simulations use fixed seeds (123:152) for reproducibility across 30 runs.
