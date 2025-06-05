@@ -41,10 +41,10 @@ fitControl_cv   <- trainControl(method = "cv", number = 10, classProbs = TRUE, s
 # Models and tuning grids
 models <- list(
   lr = list(method = "glm", control = fitControl_none),
-  # svm = list(method = "svmLinear2", control = fitControl_svm, tuneGrid = expand.grid(cost = c(0.001, 0.01, 0.1, 1))),
-  # random_forest = list(method = "rf", control = fitControl_cv, tuneGrid = expand.grid(mtry = c(2, 4, 6))),
-  # naivebayes = list(method = "naive_bayes", control = fitControl_cv, tuneGrid = expand.grid(usekernel = TRUE, laplace = c(0, 0.5, 1), adjust = c(0.75, 1, 1.25, 1.5))),
-  # neural_net = list(method = "nnet", control = fitControl_cv, tuneGrid = expand.grid(size = seq(from = 3, to = 10, by = 1), decay = seq(from = 0.1, to = 0.5, by = 0.1)))
+  svm = list(method = "svmLinear2", control = fitControl_svm, tuneGrid = expand.grid(cost = c(0.001, 0.01, 0.1, 1))),
+  random_forest = list(method = "rf", control = fitControl_cv, tuneGrid = expand.grid(mtry = c(2, 4, 6))),
+  naivebayes = list(method = "naive_bayes", control = fitControl_cv, tuneGrid = expand.grid(usekernel = TRUE, laplace = c(0, 0.5, 1), adjust = c(0.75, 1, 1.25, 1.5))),
+  neural_net = list(method = "nnet", control = fitControl_cv, tuneGrid = expand.grid(size = seq(from = 3, to = 10, by = 1), decay = seq(from = 0.1, to = 0.5, by = 0.1)))
 )
 
 # Log-loss function
@@ -162,7 +162,7 @@ for (dist in distributions) {
           calibration_loss_bs = brier_score(test$C, p_test) - brier_score(test$C, test$C),
           refinement_loss_bs = brier_score(test$y, test$C),
           ece_stat = ece_mce(test$y, p_test, g = 10, 'C')$ece#,
-         # ece_acc =  ece_mce(test$y, p_test, g=10, 'C',yhat = y_hat)$ece_acc
+          ece_acc =  ece_mce(test$y, p_test, g=10, 'C',yhat = y_hat)$ece_acc
         )
         cat(" success\n")
       }, error = function(e) {
@@ -187,7 +187,7 @@ for (dist in distributions) {
           Refinement_Loss_LL = res$refinement_loss_ll,
           LL_y = res$ll_y,
           ECE = res$ece_stat,
-         # ECE_acc=res$ece_acc,
+          ECE_acc=res$ece_acc,
           AUC = res$auc,
           Brier = res$brier_score,
           Epistemic_Loss_BS = res$bs_epistemic_loss,
@@ -212,7 +212,7 @@ for (dist in distributions) {
                 total = n(),
                 proportion = count_pval_gt_005 / total)
     
-    write.csv(pval_summary, paste0("recalibration/pvalue_counts_", dist$name, ".csv"), row.names = FALSE)
+    write.csv(pval_summary, paste0("recalibration_beta/pvalue_counts_", dist$name, ".csv"), row.names = FALSE)
     print(pval_summary)
   }
 }
@@ -247,8 +247,8 @@ for (prob_name in names(final_results)) {
   print(latex_table)
   
   # Sauvegarde
-  save(list = "latex_table", file = paste0("recalibration/latex_table_", prob_name, ".RData"))
-  tex_filename <- paste0("recalibration/latex_table_", prob_name, ".tex")
+  save(list = "latex_table", file = paste0("recalibration_beta/latex_table_", prob_name, ".RData"))
+  tex_filename <- paste0("recalibration_beta/latex_table_", prob_name, ".tex")
   print(latex_table, type = "latex", file = tex_filename, include.rownames = TRUE)
   
 }
