@@ -20,7 +20,7 @@ We simulate datasets where the true probabilities are known, allowing us to:
 ---
 
 ## 📁 Repository Structure
-├── calibration/ # All tables for initial evaluation 
+├── calibration/ # All tables for initial evaluation <p
 ├── recalibration/ # All tables for Platt Scaling
 ├── recalibration_beta/ # All tables for Beta Calibration
 ├── utils/ # Helper functions
