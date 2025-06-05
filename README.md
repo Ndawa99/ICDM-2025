@@ -42,10 +42,13 @@ To ensure proper parallel behavior, each script registers a cluster via `doParal
 To execute the full experimental setup, open R and run:
 
 ```r
-source("main_script.R")
-
 ## Dependencies
 install.packages(c("dplyr", "caret", "randomForest", "ggplot2", "gridExtra", "faux", "kernlab", "naivebayes", "moments", "xtable", "doParallel", "nnet", "betacal"))
+
+source("main_script.R")
+
+```r
+
 
 
 ## Reproducibility
