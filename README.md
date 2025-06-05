@@ -7,29 +7,48 @@ _Submitted to ICDM 2025_
 
 ---
 
-##  Overview
+## Structure
 
-This project investigates how well probabilistic classifiers approximate the true underlying probability distribution, both **before and after recalibration**. It highlights the **limitations of common calibration metrics**, particularly the widely-used ECE, and evaluates the ability of recalibration methods to recover calibration.
-
-We simulate datasets where the true probabilities are known, allowing us to:
-- Validate classical results in calibration.
+This study investigates how well probabilistic classifiers approximate the true underlying probability distribution, both **before and after recalibration**. It highlights the **limitations of common calibration metrics**, particularly the widely-used ECE, and evaluates the ability of recalibration methods to recover calibration. We simulate datasets where the true probabilities are known, allowing us to:
+- Validate results in calibration.
 - Analyze distortions in the **True Distribution Shape (TDS)** caused by classifiers.
 - Compare calibration metrics and decompositions.
 - Evaluate the effect of **Platt Scaling** and **Beta Calibration**.
 
+
+Each folder in this repository corresponds to a step of the pipeline and includes its own `README.md` with usage instructions:
+
+- `calibration/` – All metric tables for each TDS **before** recalibration
+- `recalibration/` – Metric tables **after Platt Scaling**
+- `recalibration_beta/` – Metric tables **after Beta Calibration**
+- `utils/` – Custom metric functions (AUC, Brier Score, ECE variants)
+- `plots/` – Graphics comparing calibration before/after recalibration
+
+To reproduce the full pipeline, use the main script: [`main_script.R`](./main_script.R)
+
 ---
 
-## 📁 Repository Structure
-├── calibration/ # All tables for initial evaluation <p
-├── recalibration/ # All tables for Platt Scaling
-├── recalibration_beta/ # All tables for Beta Calibration
-├── utils/ # Helper functions
-├── plots/ # Generated figures
-├── ICDM calibration metrics.R
-├── ICDM recalibration PS metrics.R
-├── ICDM recalibration beta metrics.R
-├── ICDM graphics.R
-├── ICDM recalibration graphics.R
-├── ICDM error recalibration graphics.R
-├── main_pipeline.R # Master script to reproduce the full pipeline
-└── README.md # This file
+## Parallel Execution
+
+All simulations and model evaluations are performed using **parallel computing** on 7 cores  
+(by default, `detectCores() - 1`). You can modify the number of workers in each script if needed.
+
+To ensure proper parallel behavior, each script registers a cluster via `doParallel::registerDoParallel()`.
+
+---
+
+## Run the Full Pipeline
+
+To execute the full experimental setup, open R and run:
+
+```r
+source("main_script.R")
+
+## Dependencies
+install.packages(c("dplyr", "caret", "randomForest", "ggplot2", "gridExtra", "faux", "kernlab", "naivebayes", "moments", "xtable", "doParallel", "nnet", "betacal"))
+
+
+## Reproducibility
+- Simulations use fixed seeds (123:152) for reproducibility across 30 runs.
+- Data are generated synthetically using Beta-distributed true probabilities.
+- All metric outputs are saved in CSV and table LaTeX formats.
