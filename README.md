@@ -35,6 +35,10 @@ All simulations and model evaluations are performed using **parallel computing**
 
 To ensure proper parallel behavior, each script registers a cluster via `doParallel::registerDoParallel()`.
 
+## Reproducibility
+- Simulations use fixed seeds (123:152) for reproducibility across 30 runs.
+- Data are generated synthetically using Beta-distributed true probabilities.
+- All metric outputs are saved in CSV and table LaTeX formats.
 ---
 
 ## Run the Full Pipeline
@@ -47,11 +51,5 @@ install.packages(c("dplyr", "caret", "randomForest", "ggplot2", "gridExtra", "fa
 
 source("main_script.R")
 
-```r
 
 ---
-
-## Reproducibility
-- Simulations use fixed seeds (123:152) for reproducibility across 30 runs.
-- Data are generated synthetically using Beta-distributed true probabilities.
-- All metric outputs are saved in CSV and table LaTeX formats.
