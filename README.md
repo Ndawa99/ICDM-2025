@@ -1,4 +1,4 @@
-# ICDM 2025 – Classifier Calibration and Recalibration
+# ICDM 2025 
 
 This repository contains the code for the paper:
 
