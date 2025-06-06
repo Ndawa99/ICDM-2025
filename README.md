@@ -33,7 +33,17 @@ To reproduce the full pipeline, use the main script: [`main_script.R`](./main_sc
 All simulations and model evaluations are performed using **parallel computing** on 7 cores  
 (by default, `detectCores() - 1`). You can modify the number of workers in each script if needed.
 
-To ensure proper parallel behavior, each script registers a cluster via `doParallel::registerDoParallel()`.
+Script Execution Times (7 cores used)
+
+| Script                             | Time      |
+|-----------------------------------|-----------|
+| `ICDM calibration metrics.R`      | 180 min   |
+| `ICDM recalibration PS metrics.R` | 192 min   |
+| `ICDM calibration graphics.R`     | 4 min     |
+| `ICDM recalibration graphics.R`   | 5 min     |
+| `ICDM error recalibration graphics.R` | 12 min |
+
+These times were measured on a multi-core machine using 7 threads in parallel. Actual times may vary depending on system load. To ensure proper parallel behavior, each script registers a cluster via `doParallel::registerDoParallel()`.
 
 ## Reproducibility
 - Simulations use fixed seeds (123:152) for reproducibility across 30 runs.
