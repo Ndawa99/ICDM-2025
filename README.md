@@ -2,7 +2,7 @@
 
 This repository contains the code for the paper:
 
-**"Can we trust standard calibration metrics before and after recalibration?"**  
+**"Can we trust standard calibration metrics"**  
 _Submitted to ICDM 2025_
 
 ---
