@@ -1,0 +1,6 @@
+"model","count_pval_gt_005","total","proportion"
+"lr",28,30,0.933333333333333
+"naivebayes",0,30,0
+"neural_net",23,30,0.766666666666667
+"random_forest",0,30,0
+"svm",25,30,0.833333333333333
