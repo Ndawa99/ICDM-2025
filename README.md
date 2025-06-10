@@ -39,9 +39,10 @@ Script Execution Times (7 cores used)
 |-----------------------------------|-----------|
 | `ICDM calibration metrics.R`      | 180 min   |
 | `ICDM recalibration PS metrics.R` | 192 min   |
+| `ICDM recalibration BC metrics.R` | 192 min   |
 | `ICDM calibration graphics.R`     | 4 min     |
 | `ICDM recalibration graphics.R`   | 5 min     |
-| `ICDM error recalibration graphics.R` | 12 min |
+| `Error recalibration graphics ICDM.R` | 2 seconds |
 
 These times were measured on a multi-core machine using 7 threads in parallel. Actual times may vary depending on system load. To ensure proper parallel behavior, each script registers a cluster via `doParallel::registerDoParallel()`.
 
@@ -57,7 +58,7 @@ To execute the full experimental setup, open R and run:
 
 ```r
 ## Dependencies
-install.packages(c("dplyr", "caret", "randomForest", "ggplot2", "gridExtra", "faux", "kernlab", "naivebayes", "moments", "xtable", "doParallel", "nnet", "betacal"))
+install.packages(c("dplyr", "caret", "randomForest", "ggplot2", "gridExtra", "faux", "kernlab", "naivebayes", "moments", "xtable", "doParallel", "nnet", "betacal", "tibble","tidyr"))
 
 source("main_script.R")
 
