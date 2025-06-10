@@ -14,7 +14,7 @@ They illustrate the shape and quality of predicted probabilities **before and af
 | `summary_bell.pdf`             | Same for bell-shaped TDS |
 | `summary_u_shape.pdf`          | Same for U-shaped TDS |
 | `summary_asym.pdf`             | Same for asymmetric TDS |
-| `EL_diff_grid.pdf`             | Grid of Epistemic Loss differences (**before vs. after**) by model and TDS |
+| `diff.pdf`             | Grid of metrics differences (**before vs. after**) by model and TDS: ECE - EL - LL and BS |
 
 
 
@@ -22,8 +22,8 @@ They illustrate the shape and quality of predicted probabilities **before and af
 
 ##  Notes
 
-- Not all TDS summary plots are shown in the paper, but **all are generated** to support reproducibility.
-- `EL_diff` provide a clear view of how recalibration affects the alignment with true probabilities.
+- Not all plots are shown in the paper, but **all are generated** to support reproducibility only `diff` is in the paper.
+- `diff` provides a clear view of how recalibration affects the alignment with true probabilities.
 - Histograms allow visual assessment of **calibration** across classifiers.
 
 ---
