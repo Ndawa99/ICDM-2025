@@ -223,29 +223,29 @@ for (prob_name in names(final_results)) {
     group_by(model) %>%
     summarise(across(where(is.numeric), list(mean = mean, sd = sd), .names = "{.col}_{.fn}"))
   
-  # Garder uniquement les colonnes se terminant par _mean
-  mean_cols <- names(summary_metrics)[grepl("_mean$", names(summary_metrics))]
-  sd_cols <- gsub("_mean$", "_sd", mean_cols)
-  metric_names <- gsub("_mean$", "", mean_cols)
-  
-  # Formater en "moyenne (écart-type)"
-  formatted <- data.frame(model = summary_metrics$model)
-  for (i in seq_along(metric_names)) {
-    m_col <- mean_cols[i]
-    s_col <- sd_cols[i]
-    new_col <- metric_names[i]
-    formatted[[new_col]] <- sprintf("%.3f (%.3f)", summary_metrics[[m_col]], summary_metrics[[s_col]])
-  }
-  
-  # Générer le tableau LaTeX
-  latex_table <- xtable(t(formatted))
-  print(latex_table)
-  
-  # Sauvegarde
-  save(list = "latex_table", file = paste0("calibration/latex_table_", prob_name, ".RData"))
-  tex_filename <- paste0("calibration/latex_table_", prob_name, ".tex")
-  print(latex_table, type = "latex", file = tex_filename, include.rownames = TRUE)
-  
+ # Keep only the columns ending with _mean
+mean_cols <- names(summary_metrics)[grepl("_mean$", names(summary_metrics))]
+sd_cols <- gsub("_mean$", "_sd", mean_cols)
+metric_names <- gsub("_mean$", "", mean_cols)
+
+# Format as "mean (standard deviation)"
+formatted <- data.frame(model = summary_metrics$model)
+for (i in seq_along(metric_names)) {
+  m_col <- mean_cols[i]
+  s_col <- sd_cols[i]
+  new_col <- metric_names[i]
+  formatted[[new_col]] <- sprintf("%.3f (%.3f)", summary_metrics[[m_col]], summary_metrics[[s_col]])
+}
+
+# Generate the LaTeX table
+latex_table <- xtable(t(formatted))
+print(latex_table)
+
+# Save
+save(list = "latex_table", file = paste0("calibration/latex_table_", prob_name, ".RData"))
+tex_filename <- paste0("calibration/latex_table_", prob_name, ".tex")
+print(latex_table, type = "latex", file = tex_filename, include.rownames = TRUE)
+
 }
 end_time <- Sys.time()
 elapsed <- difftime(end_time, start_time, units = "secs")
