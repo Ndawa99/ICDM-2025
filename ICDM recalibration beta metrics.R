@@ -130,9 +130,9 @@ for (dist in distributions) {
         fit_val <- beta_calibration(p=base_val$pred_val, y=base_val$y, "abm")
 
         pred <- data.frame(pred_val=pred)
-        #y_hat <- predict(fit_val, pred, type="raw")
         p_test <-  beta_predict(p=pred, model=fit_val)
-        
+        y_hat <- as.integer(p_test > 0.5)
+
         # Create calibration groups
         mtx <- data.frame(y = test$y, prob = p_test, id=rownames(test))
         mtx <- mtx[order(mtx$prob), ]
@@ -148,7 +148,6 @@ for (dist in distributions) {
           kolmogrov_test = ks.test(prob[test_ind], p_test)$p.value,
           true_mse = mean((p_test - prob[test_ind])^2),
           ll_p = log_loss(prob[test_ind], p_test),
-          ll_pi = log_loss(p_test, p_test),
           true_ll_epistemic_loss = log_loss(prob[test_ind], p_test) - log_loss(prob[test_ind], prob[test_ind]),
           irreducible_loss_ll = log_loss(test$y, prob[test_ind]),
           calibration_loss_ll = log_loss(test$C, p_test) - log_loss(test$C, test$C),
@@ -161,7 +160,7 @@ for (dist in distributions) {
           irreducible_loss_bs = brier_score(test$y, prob[test_ind]),
           calibration_loss_bs = brier_score(test$C, p_test) - brier_score(test$C, test$C),
           refinement_loss_bs = brier_score(test$y, test$C),
-          ece_stat = ece_mce(test$y, p_test, g = 10, 'C')$ece#,
+          ece_stat = ece_mce(test$y, p_test, g = 10, 'C')$ece,
           ece_acc =  ece_mce(test$y, p_test, g=10, 'C',yhat = y_hat)$ece_acc
         )
         cat(" success\n")
@@ -180,7 +179,6 @@ for (dist in distributions) {
           p_valueks = res$kolmogrov_test,
           True_MSE = res$true_mse,
           LL_p = res$ll_p,
-          LL_pi=res$ll_pi,
           Epistemic_Loss_LL = res$true_ll_epistemic_loss,
           Irreducible_Loss_LL = res$irreducible_loss_ll,
           Calibration_Loss_LL = res$calibration_loss_ll,
