@@ -21,9 +21,9 @@ source("utils/brier_score.R")
 source("utils/mce_ece.R")
 
 # Parameters
-n <- 100
+n <- 5000
 g <- 10
-seeds <- 123#:152
+seeds <- 123:152
 
 # Beta distribution settings
 distributions <- list(
@@ -40,11 +40,11 @@ fitControl_cv   <- trainControl(method = "cv", number = 10, classProbs = TRUE, s
 
 # Models and tuning grids
 models <- list(
-  lr = list(method = "glm", control = fitControl_none),
-  svm = list(method = "svmLinear2", control = fitControl_svm, tuneGrid = expand.grid(cost = c(0.001, 0.01, 0.1, 1))),
-  random_forest = list(method = "rf", control = fitControl_cv, tuneGrid = expand.grid(mtry = c(2, 4, 6))),
-  naivebayes = list(method = "naive_bayes", control = fitControl_cv, tuneGrid = expand.grid(usekernel = TRUE, laplace = c(0, 0.5, 1), adjust = c(0.75, 1, 1.25, 1.5))),
-  neural_net = list(method = "nnet", control = fitControl_cv, tuneGrid = expand.grid(size = seq(from = 3, to = 10, by = 1), decay = seq(from = 0.1, to = 0.5, by = 0.1)))
+   lr = list(method = "glm", control = fitControl_none),
+   svm = list(method = "svmLinear2", control = fitControl_svm, tuneGrid = expand.grid(cost = c(0.001, 0.01, 0.1, 1))),
+   random_forest = list(method = "rf", control = fitControl_cv, tuneGrid = expand.grid(mtry = c(2, 4, 6))),
+   naivebayes = list(method = "naive_bayes", control = fitControl_cv, tuneGrid = expand.grid(usekernel = TRUE, laplace = c(0, 0.5, 1), adjust = c(0.75, 1, 1.25, 1.5))),
+   neural_net = list(method = "nnet", control = fitControl_cv, tuneGrid = expand.grid(size = seq(from = 3, to = 10, by = 1), decay = seq(from = 0.1, to = 0.5, by = 0.1)))
 )
 
 # Log-loss function
@@ -130,9 +130,10 @@ for (dist in distributions) {
         fit_val <- beta_calibration(p=base_val$pred_val, y=base_val$y, "abm")
 
         pred <- data.frame(pred_val=pred)
-        p_test <-  beta_predict(p=pred, model=fit_val)
+        p_test <-  beta_predict(p=pred, fit_val)
         y_hat <- as.integer(p_test > 0.5)
 
+        
         # Create calibration groups
         mtx <- data.frame(y = test$y, prob = p_test, id=rownames(test))
         mtx <- mtx[order(mtx$prob), ]
@@ -148,6 +149,7 @@ for (dist in distributions) {
           kolmogrov_test = ks.test(prob[test_ind], p_test)$p.value,
           true_mse = mean((p_test - prob[test_ind])^2),
           ll_p = log_loss(prob[test_ind], p_test),
+          ll_pi = log_loss(p_test, p_test),
           true_ll_epistemic_loss = log_loss(prob[test_ind], p_test) - log_loss(prob[test_ind], prob[test_ind]),
           irreducible_loss_ll = log_loss(test$y, prob[test_ind]),
           calibration_loss_ll = log_loss(test$C, p_test) - log_loss(test$C, test$C),
@@ -179,6 +181,7 @@ for (dist in distributions) {
           p_valueks = res$kolmogrov_test,
           True_MSE = res$true_mse,
           LL_p = res$ll_p,
+          LL_pi=res$ll_pi,
           Epistemic_Loss_LL = res$true_ll_epistemic_loss,
           Irreducible_Loss_LL = res$irreducible_loss_ll,
           Calibration_Loss_LL = res$calibration_loss_ll,
@@ -226,13 +229,12 @@ for (prob_name in names(final_results)) {
     group_by(model) %>%
     summarise(across(where(is.numeric), list(mean = mean, sd = sd), .names = "{.col}_{.fn}"))
   
-# Keep only the columns ending with _mean
+  # Garder uniquement les colonnes se terminant par _mean
   mean_cols <- names(summary_metrics)[grepl("_mean$", names(summary_metrics))]
   sd_cols <- gsub("_mean$", "_sd", mean_cols)
   metric_names <- gsub("_mean$", "", mean_cols)
   
-
-# Format as "mean (standard deviation)"
+  # Formater en "moyenne (écart-type)"
   formatted <- data.frame(model = summary_metrics$model)
   for (i in seq_along(metric_names)) {
     m_col <- mean_cols[i]
@@ -241,12 +243,11 @@ for (prob_name in names(final_results)) {
     formatted[[new_col]] <- sprintf("%.3f (%.3f)", summary_metrics[[m_col]], summary_metrics[[s_col]])
   }
   
-
-# Generate the LaTeX table
+  # Générer le tableau LaTeX
   latex_table <- xtable(t(formatted))
   print(latex_table)
   
-  # Save
+  # Sauvegarde
   save(list = "latex_table", file = paste0("recalibration_beta/latex_table_", prob_name, ".RData"))
   tex_filename <- paste0("recalibration_beta/latex_table_", prob_name, ".tex")
   print(latex_table, type = "latex", file = tex_filename, include.rownames = TRUE)
