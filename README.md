@@ -39,7 +39,7 @@ Script Execution Times (7 cores used)
 |-----------------------------------|-----------|
 | `ICDM calibration metrics.R`      | 180 min   |
 | `ICDM recalibration PS metrics.R` | 192 min   |
-| `ICDM recalibration BC metrics.R` | 192 min   |
+| `ICDM recalibration beta metrics.R` | 192 min   |
 | `ICDM calibration graphics.R`     | 4 min     |
 | `ICDM recalibration graphics.R`   | 5 min     |
 | `Error recalibration graphics ICDM.R` | 2 seconds |
