@@ -1,10 +1,3 @@
-# ICDM 2025 
-
-This repository contains the code for the paper:
-
-**"Can we trust standard calibration metrics"**  
-_Submitted to ICDM 2025_
-
 ---
 
 ## Structure
